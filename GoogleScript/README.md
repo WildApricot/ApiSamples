@@ -1,0 +1,2 @@
+This folder contains google script samples. These scripts are expected to be executed inside google spreadsheet.
+See http://help.wildapricot.com/display/DOC/Sample+API+V2+applications#SampleAPIV2applications-GoogleSpreadsheetapplication to create sample google spreadsheet and add automation to it.
