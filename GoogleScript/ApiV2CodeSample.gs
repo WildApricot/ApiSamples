@@ -65,7 +65,7 @@ function getDataFromApi(url, token)
 }
 function retrieveTokenByAdminCredentials(authServiceUrl, login, password)
 {
-  var clientId = "sample_google_script_app";
+  var clientId = "myGoogleScriptApp";
   var clientSecret = "open_wa_api_client";
   var scopeNames = "general_info contacts finances events event_registrations account membership_levels settings";
    
