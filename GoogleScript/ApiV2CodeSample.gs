@@ -67,7 +67,7 @@ function retrieveTokenByAdminCredentials(authServiceUrl, login, password)
 {
   var clientId = "myGoogleScriptApp";
   var clientSecret = "open_wa_api_client";
-  var scopeNames = "general_info contacts finances events event_registrations account membership_levels settings";
+  var scopeNames = "contacts finances events event_registrations account membership_levels";
    
   var authRequestParams = {
     method:'POST',
@@ -84,9 +84,7 @@ function retrieveTokenByAdminCredentials(authServiceUrl, login, password)
 
 function retrieveTokenByApiKey(authServiceUrl, apiKey)
 {
-  var clientId = "sample_google_script_app";
-  var clientSecret = "open_wa_api_client";
-  var scopeNames = "general_info contacts finances events event_registrations account membership_levels settings";
+  var scopeNames = "contacts finances events event_registrations account membership_levels";
   
   var authRequestParams = {
     method:'POST',
