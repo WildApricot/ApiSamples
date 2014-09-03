@@ -60,7 +60,7 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
        
        public function initTokenByContactCredentials($userName, $password, $scope = null)
        {
-          if (!$scope) {
+          if ($scope) {
              $this->tokenScope = $scope;
           }
 
@@ -72,7 +72,7 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
 
        public function initTokenByApiKey($apiKey, $scope = null)
        {
-          if (!$scope) {
+          if ($scope) {
              $this->tokenScope = $scope;
           }
 
