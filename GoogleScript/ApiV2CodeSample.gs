@@ -1,13 +1,13 @@
+var authServiceUrl = 'https://oauth.wildapricot.org/auth/token';
+var apiUrl = 'https://api.wildapricot.org';
+
 function onOpen() {   
   SpreadsheetApp.getUi()
       .createMenu('Wild Apricot')
       .addItem('Get account details', 'getAccountDetails')
       .addToUi();
 };
-function getAccountDetails(){
-  var authServiceUrl = 'https://oauth.wildapricot.org/auth/token';
-  var apiUrl = 'https://api.wildapricot.org';
-   
+function getAccountDetails(){   
   Logger.clear();
    
   var ui = SpreadsheetApp.getUi();  
