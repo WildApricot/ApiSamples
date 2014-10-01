@@ -13,12 +13,15 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
   
     $waApiClient = WaApiClient::getInstance();
 
-	// uncomment only one line of these two
+  // uncomment only one line of these two
     // $waApiClient->initTokenByApiKey('put_your_apikey_here');
-    $waApiClient->initTokenByContactCredentials('admin@yourdomain123.net', 'your_password');
+    $waApiClient->initTokenByContactCredentials('admin@yourdomain.com', 'your_password');
   
-    $accountUrl = getAccountDetails() ['Url'];
-    $contacts = getContactsList() ['Contacts'];
+    $account = getAccountDetails();
+    $accountUrl = $account['Url'];
+    
+    $contactsResult = getContactsList(); 
+    $contacts =  $contactsResult['Contacts'];
 
     foreach($contacts as $contact) {
        echo '<br />';
@@ -29,7 +32,8 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
     {
        global $waApiClient;
        $url = 'https://api.wildapricot.org/v2/Accounts/';
-       return $waApiClient->makeRequest($url) [0]; // usually you have access to one account
+       $response = $waApiClient->makeRequest($url); 
+       return  $response[0]; // usually you have access to one account
     }
 
     function getContactsList()
