@@ -159,13 +159,13 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
           curl_setopt($ch, CURLOPT_POST, true);
           curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-          $result = json_decode(curl_exec($ch) , true);
-          if ($result === false) {
+		  $response = curl_exec($ch);
+		  if ($response === false) {
              throw new Exception(curl_errno($ch) . ': ' . curl_error($ch));
           }
-
-          // var_dump($result); // Uncomment line to debug response
-
+          // var_dump($response); // Uncomment line to debug response	
+		  
+          $result = json_decode($response , true);
           curl_close($ch);
           return $result['access_token'];
        }
