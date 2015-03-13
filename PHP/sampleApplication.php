@@ -110,12 +110,14 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
              'Content-Type: application/json'
           );
           curl_setopt($ch, CURLOPT_URL, $url);
-          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $verb);
+          
           if ($data) {
              $jsonData = json_encode($data);
              curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+             $headers = array_merge($headers, array('Content-Length: '.strlen($jsonData)));
           }
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+          curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $verb);
 
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
           $jsonResult = curl_exec($ch);
