@@ -31,7 +31,7 @@ class WaApiClient(object):
     _all_scopes_list = "contacts finances events event_registrations account membership_levels"
 
     def authenticate_with_apikey(self, api_key, scope=None):
-        """perform authentication by contact credentials and store result for execute_request method
+        """perform authentication by api key and store result for execute_request method
 
         api_key -- secret api key from account settings
         scope -- optional scope of authentication request. If None full list of API scopes will be used.
