@@ -1,3 +1,5 @@
 C#/PublicAPI.Samples/bin/
 C#/PublicAPI.Samples/obj/
 C#/packages/
+python/.idea/
+python/__pycache__/

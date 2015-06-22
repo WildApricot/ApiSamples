@@ -26,9 +26,12 @@ class WaApiClient(object):
     auth_endpoint = "https://oauth.wildapricot.org/auth/token"
     api_endpoint = "https://api.wildapricot.org"
     _token = None
-    client_id = "samplePythonApp"
-    client_secret = "open_wa_api_client"
-    _all_scopes_list = "contacts finances events event_registrations account membership_levels"
+    client_id = None
+    client_secret = None
+
+    def __init__(self, client_id, client_secret):
+        self.client_id = client_id
+        self.client_secret = client_secret
 
     def authenticate_with_apikey(self, api_key, scope=None):
         """perform authentication by api key and store result for execute_request method
@@ -36,7 +39,7 @@ class WaApiClient(object):
         api_key -- secret api key from account settings
         scope -- optional scope of authentication request. If None full list of API scopes will be used.
         """
-        scope = self._all_scopes_list if scope is None else scope
+        scope = "auto" if scope is None else scope
         data = {
             "grant_type": "client_credentials",
             "scope": scope
@@ -56,7 +59,7 @@ class WaApiClient(object):
         password -- contact password
         scope -- optional scope of authentication request. If None full list of API scopes will be used.
         """
-        scope = self._all_scopes_list if scope is None else scope
+        scope = "auto" if scope is None else scope
         data = {
             "grant_type": "password",
             "username": username,
@@ -101,8 +104,14 @@ class WaApiClient(object):
         request.add_header("Accept", "application/json")
         request.add_header("Authorization", "Bearer " + self._get_access_token())
 
-        response = urllib.request.urlopen(request)
-        return WaApiClient._parse_response(response)
+        try:
+            response = urllib.request.urlopen(request)
+            return WaApiClient._parse_response(response)
+        except urllib.error.HTTPError as httpErr:
+            if httpErr.code == 400:
+                raise ApiException(httpErr.read())
+            else:
+                raise
 
     def _get_access_token(self):
         expires_at = self._token.retrieved_at + datetime.timedelta(seconds=self._token.expires_in - 100)
