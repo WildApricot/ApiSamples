@@ -116,9 +116,10 @@ function executeApiRequest(url, token, method, data)
 
 function retrieveTokenByAdminCredentials(authServiceUrl, login, password)
 {
-  var clientId = "myGoogleScriptApp";
+  throw 'change clientId and clientSecret to values specific for your authirized application. For details see: http://help.wildapricot.com/display/DOC54/Authorizing+external+applications');
+  var clientId = "myGoogleScriptApp"; 
   var clientSecret = "open_wa_api_client";
-  var scopeNames = "contacts finances events event_registrations account membership_levels";
+  var scopeNames = "auto";
    
   var authRequestParams = {
     method:'POST',

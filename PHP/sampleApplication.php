@@ -57,7 +57,7 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
     {
        const AUTH_URL = 'https://oauth.wildapricot.org/auth/token';
              
-       private $tokenScope = 'general_info contacts finances events event_registrations account membership_levels settings';
+       private $tokenScope = 'auto';
 
        private static $_instance;
        private $token;
@@ -138,7 +138,12 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
           }
 
           $data = sprintf("grant_type=%s&username=%s&password=%s&scope=%s", 'password', $login, $password, $this->tokenScope);
-          $authorizationHeader = "Authorization: Basic " . base64_encode( "SamplePhpApplication:open_wa_api_client");
+
+          throw new Exception('Change clientId and clientSecret to values specific for your authorized application. For details see: http://help.wildapricot.com/display/DOC54/Authorizing+external+applications');
+          $clientId = 'SamplePhpApplication';
+          $clientSecret = 'open_wa_api_client';
+          $authorizationHeader = "Authorization: Basic " . base64_encode( $clientId . ":" . $clientSecret);
+
           return $this->getAuthToken($data, $authorizationHeader);
        }
 

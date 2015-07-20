@@ -10,7 +10,6 @@
 
     public class ApiV2Sample
     {
-        private const string AllScopes = "general_info contacts finances events event_registrations account membership_levels settings";
         private static string token;
         internal static void Run()
         {
@@ -247,10 +246,15 @@
                 "password", 
                 login, 
                 password, 
-                AllScopes);
+                "auto");
+
+            throw new NonImplementedException("Change clientId and clientSecret to values specific for your authirized application. For details see: http://help.wildapricot.com/display/DOC54/Authorizing+external+applications");
+            
+            var clientId = "MySampleApplication";
+            var clientSecret = "open_wa_api_client";
 
             var response = System.Net.WebRequest.Create(ApiUrls.OAuthServiceUrl)
-                .SetBasicAuth("MySampleApplication", "open_wa_api_client")
+                .SetBasicAuth(clientId, clientSecret)
                 .SetData(authData)
                 .GetResponse();
 
