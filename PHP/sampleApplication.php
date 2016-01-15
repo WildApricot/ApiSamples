@@ -137,7 +137,7 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
              throw new Exception('login is empty');
           }
 
-          $data = sprintf("grant_type=%s&username=%s&password=%s&scope=%s", 'password', $login, $password, $this->tokenScope);
+          $data = sprintf("grant_type=%s&username=%s&password=%s&scope=%s", 'password', urlencode($login), urlencode($password), urlencode($this->tokenScope));
 
           throw new Exception('Change clientId and clientSecret to values specific for your authorized application. For details see:  https://help.wildapricot.com/display/DOC/Authorizing+external+applications');
           $clientId = 'SamplePhpApplication';
