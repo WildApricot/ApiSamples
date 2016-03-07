@@ -1,17 +1,5 @@
 // this script requires jQuery
 
-function checkClientId()
-{
-   if( clientId ) return;
-   
-   alert("clientId variable is not declared");
-}
-checkClientId();
-
-var api = WApublicApi(clientId);
-api.apiRequest(api.apiUrls.me, function (data, textStatus, jqXhr) {    
-    alert("Hello " + data.FirstName + " " + data.LastName +" !<br>Spirits say that your ID is '" + data.Id + "' and your email is '" + data.Email + "'.");           
-});
 
 function WApublicApi(clientId)
 {
@@ -53,6 +41,19 @@ function WApublicApi(clientId)
          }
      });
 }
+
+function checkClientId() {
+    if (clientId) return;
+
+    alert("clientId variable is not declared");
+}
+checkClientId();
+
+var api = WApublicApi(clientId);
+api.apiRequest(api.apiUrls.me, function (data, textStatus, jqXhr) {
+    alert("Hello " + data.FirstName + " " + data.LastName + " !<br>Spirits say that your ID is '" + data.Id + "' and your email is '" + data.Email + "'.");
+});
+
 
 /*
    function (data, textStatus, jqXhr) {    
