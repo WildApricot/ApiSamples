@@ -10,9 +10,10 @@ function WApublicApi(clientId)
          type: "GET",
          dataType: "json",
          cache: false,  
-         headers: { "clientId": clientId },
+         headers: { "clientId": this.clientId },
          success: onSuccess, 
-         error: onError
+         error: onError,
+         context: this
      });
    };
 
