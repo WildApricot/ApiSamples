@@ -4,42 +4,37 @@
 function WApublicApi(clientId)
 {
    this.clientId = clientId;
-   this.apiRequest = function(apiUrl, onSuccess, onError) {  
-      $.ajax({
+   this.apiRequest = function (apiUrl, onSuccess, onError) {
+      return $.ajax({
          url: apiUrl,
          type: "GET",
          dataType: "json",
-         cache: false,
-         async: true,     
+         cache: false,  
          headers: { "clientId": clientId },
          success: onSuccess, 
          error: onError
      });
    };
    
-   $.ajax({
-         url: "/sys/api/v2/accounts",
-         type: "GET",
-         dataType: "json",
-         async: false,     
-         headers: { "clientId": clientId },
-         success: function (data, textStatus, jqXhr) {    
-            this.accountId = data[0].Id;
-         }, 
-         error: function (jqXHR, textStatus, errorThrown) {
-             throw { status: textStatus, internalError: errorThrown };
-         }
-   });
 
-   this.apiUrls = {
-       me: function () { while (!this.accountId) { }  return '/sys/api/v2/accounts/' + this.accountId + '/contacts/me'; },
-       contacts: function () { return '/sys/api/v2/accounts/' + this.accountId + '/contacts' },
-       events: function () { return '/sys/api/v2/accounts/' + this.accountId + '/events' },
-       registrations: function () { return '/sys/api/v2/accounts/' + this.accountId + '/events' },
-       contactFields: '/sys/api/v2/accounts/' + this.accountId + '/contactFields',
-       invoices: '/sys/api/v2/accounts/' + this.accountId + '/invoices',
-       payments: '/sys/api/v2/accounts/' + this.accountId + '/payments',
-       tenders: '/sys/api/v2/accounts/' + this.accountId + '/tenders'
+    this.init = function () {
+        return this.apiRequest("/sys/api/v2/accounts",
+            function (data, textStatus, jqXhr) {
+                this.accountId = data[0].Id;
+                this.apiUrls = {
+                    me: function () { return '/sys/api/v2/accounts/' + this.accountId + '/contacts/me'; },
+                    contacts: function () { return '/sys/api/v2/accounts/' + this.accountId + '/contacts' },
+                    events: function () { return '/sys/api/v2/accounts/' + this.accountId + '/events' },
+                    registrations: function () { return '/sys/api/v2/accounts/' + this.accountId + '/events' },
+                    contactFields: '/sys/api/v2/accounts/' + this.accountId + '/contactFields',
+                    invoices: '/sys/api/v2/accounts/' + this.accountId + '/invoices',
+                    payments: '/sys/api/v2/accounts/' + this.accountId + '/payments',
+                    tenders: '/sys/api/v2/accounts/' + this.accountId + '/tenders'
+                };
+            },
+            function (jqXHR, textStatus, errorThrown) {
+                throw { status: textStatus, internalError: errorThrown };
+            });
    };
 }
 
@@ -51,9 +46,12 @@ function checkClientId() {
 checkClientId();
 
 var api = new WApublicApi(clientId);
-api.apiRequest(api.apiUrls.me(), function (data, textStatus, jqXhr) {
-    alert("Hello " + data.FirstName + " " + data.LastName + " !<br>Spirits say that your ID is '" + data.Id + "' and your email is '" + data.Email + "'.");
+$.when(api.init()).done(function () {
+    api.apiRequest(api.apiUrls.me, function (data, textStatus, jqXhr) {
+        alert("Hello " + data.FirstName + " " + data.LastName + " !<br>Spirits say that your ID is '" + data.Id + "' and your email is '" + data.Email + "'.");
+    });
 });
+
 
 
 /*
