@@ -18,6 +18,8 @@ function WApublicApi(clientId)
 
    this._onInitSucceed = function (data, textStatus, jqXhr) {
        this.accountId = data[0].Id;
+       alert(this);
+       alert(this.accountId);
        this.apiUrls = {
            me: function () { return '/sys/api/v2/accounts/' + this.accountId + '/contacts/me'; },
            contacts: function () { return '/sys/api/v2/accounts/' + this.accountId + '/contacts' },
