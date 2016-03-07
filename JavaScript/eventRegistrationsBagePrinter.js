@@ -37,7 +37,7 @@ function WApublicApi(clientId) {
 
     this.init = function () {
         return $.ajax({
-            url: apiUrl,
+            url: "/sys/api/v2/accounts",
             type: "GET",
             dataType: "json",
             cache: false,
