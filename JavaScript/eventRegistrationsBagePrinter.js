@@ -35,6 +35,7 @@ function WApublicApi(clientId)
                payments: '/sys/api/v2/accounts/' + this.accountId + '/payments',
                tenders: '/sys/api/v2/accounts/' + this.accountId + '/tenders'
             };
+            alert("account:" + this.accountId);
          }, 
          error: function (jqXHR, textStatus, errorThrown) {
              throw { status: textStatus, internalError: errorThrown };
