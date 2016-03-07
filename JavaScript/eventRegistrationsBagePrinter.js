@@ -25,22 +25,22 @@ function WApublicApi(clientId)
          headers: { "clientId": clientId },
          success: function (data, textStatus, jqXhr) {    
             this.accountId = data[0].Id;
-            this.apiUrls = {
-               me: '/sys/api/v2/accounts/' + this.accountId + '/contacts/me',
-               contacts: '/sys/api/v2/accounts/' + this.accountId + '/contacts',
-               events: '/sys/api/v2/accounts/' + this.accountId + '/events',
-               registrations: '/sys/api/v2/accounts/' + this.accountId + '/events',
-               contactFields: '/sys/api/v2/accounts/' + this.accountId + '/contactFields',
-               invoices: '/sys/api/v2/accounts/' + this.accountId + '/invoices',
-               payments: '/sys/api/v2/accounts/' + this.accountId + '/payments',
-               tenders: '/sys/api/v2/accounts/' + this.accountId + '/tenders'
-            };
-            alert("account:" + this.accountId);
          }, 
          error: function (jqXHR, textStatus, errorThrown) {
              throw { status: textStatus, internalError: errorThrown };
          }
-     });
+   });
+
+   this.apiUrls = {
+       me: function () { while (!this.accountId) { }  return '/sys/api/v2/accounts/' + this.accountId + '/contacts/me'; },
+       contacts: function () { return '/sys/api/v2/accounts/' + this.accountId + '/contacts' },
+       events: function () { return '/sys/api/v2/accounts/' + this.accountId + '/events' },
+       registrations: function () { return '/sys/api/v2/accounts/' + this.accountId + '/events' },
+       contactFields: '/sys/api/v2/accounts/' + this.accountId + '/contactFields',
+       invoices: '/sys/api/v2/accounts/' + this.accountId + '/invoices',
+       payments: '/sys/api/v2/accounts/' + this.accountId + '/payments',
+       tenders: '/sys/api/v2/accounts/' + this.accountId + '/tenders'
+   };
 }
 
 function checkClientId() {
