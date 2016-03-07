@@ -32,6 +32,7 @@ function WApublicApi(clientId) {
             payments: '/sys/api/v2/accounts/' + this.accountId + '/payments',
             tenders: '/sys/api/v2/accounts/' + this.accountId + '/tenders'
         };
+        this._initialized = true;
     };
 
     this.init = function () {
