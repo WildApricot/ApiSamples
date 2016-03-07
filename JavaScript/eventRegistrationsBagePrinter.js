@@ -51,7 +51,7 @@ function checkClientId() {
 checkClientId();
 
 var api = new WApublicApi(clientId);
-api.apiRequest(api.apiUrls.me, function (data, textStatus, jqXhr) {
+api.apiRequest(api.apiUrls.me(), function (data, textStatus, jqXhr) {
     alert("Hello " + data.FirstName + " " + data.LastName + " !<br>Spirits say that your ID is '" + data.Id + "' and your email is '" + data.Email + "'.");
 });
 
