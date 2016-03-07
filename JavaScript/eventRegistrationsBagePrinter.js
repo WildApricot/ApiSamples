@@ -61,8 +61,6 @@ checkClientId();
 
 var api = new WApublicApi(clientId);
 $.when(api.init()).done(function () {
-    alert(api.accountId);
-    alert(api.apiUrls.me());
     api.apiRequest(api.apiUrls.me(), function (data, textStatus, jqXhr) {
         alert("Hello " + data.FirstName + " " + data.LastName + " !<br>Spirits say that your ID is '" + data.Id + "' and your email is '" + data.Email + "'.");
     });
