@@ -72,7 +72,7 @@ function WApublicApi(clientId) {
 
             var result = this.account() + '/contacts';
 
-            return result + $.param(params);
+            return result + "?" + $.param(params);
         },
         event: function (eventId) {
             /**
@@ -89,7 +89,7 @@ function WApublicApi(clientId) {
 
             params = params || {};
             var result = this.account() + '/events';
-            return result + $.param(params);
+            return result + "?" + $.param(params);
         },
         registration: function (eventRegistrationId) {
             /**
@@ -105,7 +105,7 @@ function WApublicApi(clientId) {
              * @params {Object} params supported by event registrations api: contactId, eventId, $filter
              *                  at least one of these parameters should be passed
              */
-            return this.account() + '/eventregistrations' + $.param(params);
+            return this.account() + '/eventregistrations?' + $.param(params);
         },
         contactFields: function () {
             /**
@@ -126,7 +126,7 @@ function WApublicApi(clientId) {
              * @params {Object} params supported by invoices api: contactId, eventId
              *                  at least one of these parameters should be passed
              */
-            return this.account() + '/invoices' + $.param(params);
+            return this.account() + '/invoices?' + $.param(params);
         },
         payment: function (paymentId) {
             /**
@@ -142,7 +142,7 @@ function WApublicApi(clientId) {
             * @params {Object} params supported by payments api: contactId, eventId
             *                  at least one of these parameters should be passed
             */
-            return this.account() + '/payments' + $.param(params);
+            return this.account() + '/payments?' + $.param(params);
         },
         tenders: function () {
             /**
