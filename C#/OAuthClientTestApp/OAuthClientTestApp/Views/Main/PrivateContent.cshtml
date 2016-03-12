@@ -1,0 +1,13 @@
+﻿@model dynamic
+
+@{
+    ViewBag.Title = "Private content page";
+}
+
+<h2>Hello @Model.UserName</h2>
+
+@using (Html.BeginForm("logout", "Main"))
+{
+    @Html.Hidden("state")
+    <input type="submit" title="Log out" value="Log out"/>
+}

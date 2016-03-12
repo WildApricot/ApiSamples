@@ -1,0 +1,65 @@
+﻿@model OAuthClientTestApp.Model.TestEnvironmentModel
+
+@{
+    ViewBag.Title = "Public page";
+}
+<p>
+    Hi there!
+
+    Before you start playing with this app, please read <a href="http://help.wildapricot.com/display/DOC/Authorizing+external+applications">how to setup an authorized application</a>.
+</p>
+
+@using (Html.BeginForm("StartOAuthLogin", "Main"))
+{
+    <div>
+        @Html.LabelFor(m=>m.AccountId)
+        @Html.TextBoxFor(m=>m.AccountId)
+        change this value to your account ID
+    </div>
+    <div>
+        @Html.LabelFor(m => m.ClientId)
+        @Html.TextBoxFor(m => m.ClientId)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.ClientSecret)
+        @Html.TextBoxFor(m => m.ClientSecret)
+    </div>
+    <div>
+        @Html.LabelFor(m => m.PublicApiUrl)
+        @Html.TextBoxFor(m => m.PublicApiUrl)
+        don't change it
+    </div>
+    <div>
+        @Html.LabelFor(m => m.OAuthServiceUrl)
+        @Html.TextBoxFor(m => m.OAuthServiceUrl)
+        don't change it
+    </div>
+    <div>
+        @Html.LabelFor(m => m.AssociationWebSiteUrl)
+        @Html.TextBoxFor(m => m.AssociationWebSiteUrl)
+        Change to your primary domain url
+    </div>
+    <div>
+        @Html.LabelFor(m => m.Scope)
+        @Html.TextBoxFor(m => m.Scope)
+    </div>
+    <input type="submit" value="Login" title="Login with WA" />
+}
+
+@section style
+{
+    <style>
+        form div {
+            margin: 10px;
+        }
+        div label {
+            width: 200px;
+        }
+        div input[type=text] {
+            width: 400px;
+            position: absolute;
+            left: 220px;
+        }
+    </style>
+
+}
