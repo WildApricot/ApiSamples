@@ -34,7 +34,8 @@ function WApublicApi(clientId) {
             headers: { "clientId": this.clientId },
             success: params.success || function(){},
             error: params.error || function(){},
-            data: params.data
+            data: params.data,
+            contentType: "application/json"
         });
     };
 
