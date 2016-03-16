@@ -27,7 +27,7 @@ function WApublicApi(clientId) {
         }
         
         var data = "";
-        if (typeof(clientId) === "undefined" || clientId === null) {
+        if (typeof(params.data) === "undefined" || params.data === null) {
             data = null;
         }
         else if (typeof(params.data) === "string") {
