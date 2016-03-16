@@ -26,6 +26,17 @@ function WApublicApi(clientId) {
             throw "api client is not initialized yet. Please call init() before usaing api. Ex: $.when(api.init()).done(function(){  api.apiRequest(...); });";
         }
         
+        var data = "";
+        if (typeof(clientId) === "undefined" || clientId === null) {
+            data = null;
+        }
+        else if (typeof(params.data) === "string") {
+            data = params.data;
+        }
+        else {
+            data = JSON.stringify(params.data);
+        }
+        
         return $.ajax({
             url: params.apiUrl,
             type: params.method || "GET",
@@ -34,7 +45,7 @@ function WApublicApi(clientId) {
             headers: { "clientId": this.clientId },
             success: params.success || function(){},
             error: params.error || function(){},
-            data: params.data,
+            data: data,
             contentType: "application/json"
         });
     };
