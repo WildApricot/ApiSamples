@@ -9,10 +9,13 @@ $.when(api.init()).done(function () {
     var eventSelector = $("<select id='eventSelector'></select>");
     
     api.apiRequest({
-      apiUrl: api.apiUrls.events({$filter:"isUpcoming eq true"}),
-      success: function(data, textStatus, jqXhr){
-          eventSelector.find("option").remove();
-      }
+        apiUrl: api.apiUrls.events({$filter:"isUpcoming eq true"}),
+        success: function(data, textStatus, jqXhr) {
+            eventSelector.find("option").remove();
+            $.each(data, function(key, value) {   
+                eventSelector.append($('<option>', { value : value.Id }).text(value.Name)); 
+            });
+        }
     });
     
     // create badge constructor: size, background image, content, page breaks (page-break-after:always or page-break-inside:avoid) 
