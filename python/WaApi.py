@@ -47,7 +47,7 @@ class WaApiClient(object):
         encoded_data = urllib.parse.urlencode(data).encode()
         request = urllib.request.Request(self.auth_endpoint, encoded_data, method="POST")
         request.add_header("ContentType", "application/x-www-form-urlencoded")
-        request.add_header("Authorization", 'Basic ' + base64.standard_b64encode(('APIKEY' + ':' + api_key).encode()))
+        request.add_header("Authorization", 'Basic ' + base64.standard_b64encode(('APIKEY:' + api_key).encode()).decode())
         response = urllib.request.urlopen(request)
         self._token = WaApiClient._parse_response(response)
         self._token.retrieved_at = datetime.datetime.now()
