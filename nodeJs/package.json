@@ -1,0 +1,11 @@
+{
+  "name": "node-api-sample",
+  "version": "1.0.0",
+  "description": "Wild apricot API client code sample",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "dsmirnov@wildapricot.com",
+  "license": "ISC"
+}
