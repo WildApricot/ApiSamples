@@ -116,7 +116,7 @@ function executeApiRequest(url, token, method, data)
 
 function retrieveTokenByAdminCredentials(authServiceUrl, login, password)
 {
-  throw 'change clientId and clientSecret to values specific for your authirized application. For details see:  https://help.wildapricot.com/display/DOC/Authorizing+external+applications');
+  throw 'change clientId and clientSecret to values specific for your authirized application. For details see:  https://help.wildapricot.com/display/DOC/Authorizing+external+applications';
   var clientId = "myGoogleScriptApp"; 
   var clientSecret = "open_wa_api_client";
   var scopeNames = "auto";
