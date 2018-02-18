@@ -248,7 +248,7 @@
                 password, 
                 "auto");
 
-            throw new NonImplementedException("Change clientId and clientSecret to values specific for your authirized application. For details see: https://help.wildapricot.com/display/DOC/Authorizing+external+applications");
+            throw new NotImplementedException("Change clientId and clientSecret to values specific for your authirized application. For details see: https://help.wildapricot.com/display/DOC/Authorizing+external+applications");
             
             var clientId = "MySampleApplication";
             var clientSecret = "open_wa_api_client";
