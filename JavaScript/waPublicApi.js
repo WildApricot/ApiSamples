@@ -165,6 +165,7 @@ function WApublicApi(clientId) {
     };
 
     this._onInitSucceed = function (data, textStatus, jqXhr) {
+        if(data == null) return;
         this.accountId = data[0].Id;
         this.apiUrls.accountId = this.accountId;
         this._initialized = true;
