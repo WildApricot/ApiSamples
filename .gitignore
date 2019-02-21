@@ -4,4 +4,8 @@ C#/packages/
 python/.idea/
 python/__pycache__/
 python/config.py
+python/.vscode/
+WildA/
 nodeJs/node_modules/
+# Python compiled files
+*.pyc
