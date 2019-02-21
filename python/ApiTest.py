@@ -3,14 +3,29 @@ __author__ = 'dsmirnov@wildapricot.com'
 import WaApi
 import urllib.parse
 import json
+import logging
+import config
+
+API_KEY = config.API_KEY
+
+# create logger with 'spam_application'
+# set up logging to file - see previous section for more details
+logging.basicConfig(level=logging.INFO,
+                             format='%(asctime)s %(levelname)-8s %(message)s',
+                             datefmt='%m-%d %H:%M'
+                    )
 
 
-def get_10_active_members():
-    params = {'$filter': 'member eq true',
-              '$top': '10',
+def get_all_active_members():
+    # Filter query is for active members only
+    # Ids are: 1 - Active
+    #          2 - Lapsed
+    #          20- PendingNew
+    #          3 - PendingRenewal
+    params = {'$filter': "'Membership status.Label' eq 'Active'",
               '$async': 'false'}
     request_url = contactsUrl + '?' + urllib.parse.urlencode(params)
-    print(request_url)
+    logging.debug(request_url)
     return api.execute_request(request_url).Contacts
 
 
@@ -46,23 +61,28 @@ def archive_contact(contact_id):
 
 # How to obtain application credentials: https://help.wildapricot.com/display/DOC/API+V2+authentication#APIV2authentication-Authorizingyourapplication
 api = WaApi.WaApiClient("CLIENT_ID", "CLIENT_SECRET")
-api.authenticate_with_contact_credentials("ADMINISTRATOR_USERNAME", "ADMINISTRATOR_PASSWORD")
+logging.debug(API_KEY)
+api.authenticate_with_apikey(API_KEY, scope='auto')
 accounts = api.execute_request("/v2/accounts")
-account = accounts[0]
-
-print(account.PrimaryDomainName)
+if len(accounts) > 0:
+    for account in accounts:
+        logging.info(account.PrimaryDomainName)
 
 contactsUrl = next(res for res in account.Resources if res.Name == 'Contacts').Url
 
-# get top 10 active members and print their details
-contacts = get_10_active_members()
-for contact in contacts:
-    print_contact_info(contact)
+# Current query returns only the active members
+contacts = get_all_active_members()
+
+logging.info('Total number of Active members: {}'.format(len(contacts)))
+
+if logging.getLogger().getEffectiveLevel() is logging.DEBUG:
+    for contact in contacts:
+        print_contact_info(contact)
 
 # create new contact
-new_copntact = create_contact('some_email1@invaliddomain.org', 'John Doe')
-print_contact_info(new_copntact)
+#new_copntact = create_contact('some_email1@invaliddomain.org', 'John Doe')
+#print_contact_info(new_copntact)
 
 # finally archive it
-archived_contact = archive_contact(new_copntact.Id)
-print_contact_info(archived_contact)
+#archived_contact = archive_contact(new_copntact.Id)
+#print_contact_info(archived_contact)
