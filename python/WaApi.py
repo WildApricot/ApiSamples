@@ -115,7 +115,7 @@ class WaApiClient(object):
 
     def _get_access_token(self):
         expires_at = self._token.retrieved_at + datetime.timedelta(seconds=self._token.expires_in - 100)
-        if datetime.datetime.utcnow() > expires_at:
+        if datetime.datetime.now() > expires_at:
             self._refresh_auth_token()
         return self._token.access_token
 
