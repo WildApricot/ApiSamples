@@ -50,7 +50,7 @@ class WaApiClient(object):
         request.add_header("Authorization", 'Basic ' + base64.standard_b64encode(('APIKEY:' + api_key).encode()).decode())
         response = urllib.request.urlopen(request)
         self._token = WaApiClient._parse_response(response)
-        self._token.retrieved_at = datetime.datetime.now()
+        self._token.retrieved_at = datetime.datetime.utcnow()
 
     def authenticate_with_contact_credentials(self, username, password, scope=None):
         """perform authentication by contact credentials and store result for execute_request method
@@ -73,7 +73,7 @@ class WaApiClient(object):
         request.add_header("Authorization", 'Basic ' + auth_header)
         response = urllib.request.urlopen(request)
         self._token = WaApiClient._parse_response(response)
-        self._token.retrieved_at = datetime.datetime.now()
+        self._token.retrieved_at = datetime.datetime.utcnow()
 
     def execute_request(self, api_url, api_request_object=None, method=None):
         """
