@@ -42,7 +42,8 @@ class WaApiClient(object):
         scope = "auto" if scope is None else scope
         data = {
             "grant_type": "client_credentials",
-            "scope": scope
+            "scope": scope,
+            "obtain_refresh_token": "true"
         }
         encoded_data = urllib.parse.urlencode(data).encode()
         request = urllib.request.Request(self.auth_endpoint, encoded_data, method="POST")
