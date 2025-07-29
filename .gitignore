@@ -1,6 +1,8 @@
-C#/PublicAPI.Samples/bin/
-C#/PublicAPI.Samples/obj/
-C#/packages/
 python/.idea/
 python/__pycache__/
 nodeJs/node_modules/
+.vs/
+packages/
+.vs/
+bin/
+obj/
