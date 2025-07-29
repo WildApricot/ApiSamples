@@ -6,20 +6,20 @@
     {
         public static void Main(string[] args)
         {
-            Console.Write("enter api version (1 / 2):");
+            Console.Write("enter api version (2.3 / 2):");
             var key = Console.ReadLine();
             switch (key)
             {
-                case "1":
-                {
-                    ApiV1Sample.Run();
-                    break;
-                }
+                case "2.3":
+                    {
+                        ApiV23Sample.Run();
+                        break;
+                    }
                 case "2":
-                {
-                    ApiV2Sample.Run();
-                    break;
-                }
+                    {
+                        ApiV2Sample.Run();
+                        break;
+                    }
             }
 
             Console.WriteLine("Press any key to exit...");
