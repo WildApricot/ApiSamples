@@ -4,6 +4,7 @@ function onOpen() {
       .createMenu('Wild Apricot')
       .addItem('Get account details', 'getAccountDetails')
       .addItem('Show me some contact magic', 'createNewContact')
+      .addItem('Get Contacts', 'getContacts')
       .addToUi();
 };
 
@@ -22,6 +23,76 @@ function getAccountDetails(){
   sheet.getRange('B6').setValue(account.PrimaryDomainName);
   sheet.getRange('B7').setValue(account.ContactLimitInfo.CurrentContactsCount);
   sheet.getRange('B8').setValue(account.ContactLimitInfo.BillingPlanContactsLimit);  
+}
+
+function getContacts(){  
+  Logger.clear();
+  
+  var urls = urlBuilder();
+  var ui = SpreadsheetApp.getUi();  
+  var sheet = SpreadsheetApp.getActiveSpreadsheet().insertSheet();
+  var token = getToken(ui, urls.getAuthServiceUrl());
+  var accountId = getDataFromApi(urls.getAccountsListUrl(), token)[0].Id;
+
+  
+  var urlBase = urls.getContactsListUrl(accountId) + '/?$async=false';
+  var pageSize = 10;
+  var skip = 0;
+  var allContacts = [];
+
+  // Fetch all pages
+  while (true) {
+    var url = urlBase + "&$top=" + pageSize + "&$skip=" + skip;
+    var result = executeApiRequest(url, token, "GET"); // array of contacts
+    batch = result.Contacts
+    if (!batch || batch.length === 0) break;
+
+    allContacts = allContacts.concat(batch);
+    skip += pageSize;
+  }
+
+  if (allContacts.length === 0) {
+    SpreadsheetApp.getUi().alert("No contacts found.");
+    return;
+  }
+
+  // Collect all unique field names from FieldValues
+  var fieldNamesSet = new Set();
+  allContacts.forEach(function(c) {
+    if (c.FieldValues && Array.isArray(c.FieldValues)) {
+      c.FieldValues.forEach(function(fv) {
+        fieldNamesSet.add(fv.FieldName);
+      });
+    }
+  });
+  var fieldNames = Array.from(fieldNamesSet);
+
+  // Final headers: Id, Name + all field names
+  var headers = ["Id", "Name"].concat(fieldNames);
+  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
+
+  // Build rows
+  var values = allContacts.map(function(c) {
+    var row = [c.Id, c.Name];
+
+    // map each fieldName → value
+    var fieldMap = {};
+    if (c.FieldValues) {
+      c.FieldValues.forEach(function(fv) {
+        fieldMap[fv.FieldName] = fv.Value;
+      });
+    }
+
+    // fill values in same order as headers
+    fieldNames.forEach(function(fn) {
+      row.push(fieldMap[fn] !== undefined ? fieldMap[fn] : "");
+    });
+
+    return row;
+  });
+
+  // Write rows
+  sheet.getRange(2, 1, values.length, headers.length).setValues(values);
 }
 
 function createNewContact()
