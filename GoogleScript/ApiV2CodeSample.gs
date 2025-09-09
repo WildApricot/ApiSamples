@@ -36,7 +36,7 @@ function getContacts(){
 
   
   var urlBase = urls.getContactsListUrl(accountId) + '/?$async=false';
-  var pageSize = 10;
+  var pageSize = 100;
   var skip = 0;
   var allContacts = [];
 
