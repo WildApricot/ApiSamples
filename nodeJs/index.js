@@ -1,59 +1,68 @@
-const request = require('request');
-const oauthTokenUrl = 'https://oauth.wildapricot.org/auth/token';
-const apiBaseUrl = 'https://api.wildapricot.org/v2/';
+const axios = require('axios');
+const config = require('./config');
 
-// these api key and accountId are related to demo account houseofbamboo.wildapricot.org
-// It provides read-only access to demo content
-// please replace it with your own values
-
-const api_key = 'ebyvoeo6fauigr1w7h3mbhd7ra93dh';
-const accountId = 183112;
-
-request.post(oauthTokenUrl, {
-  form: {
-    grant_type: 'client_credentials',
-    scope: 'auto'
-  },
-  headers: {
-     'content-type': 'application/x-www-form-urlencoded',
-     'Accept': 'application/json',
-     "Authorization": "Basic " + new Buffer(`APIKEY:${api_key}`).toString('base64')
-   },
-  json: true
-}, function (err, res, body) {
-  if( err) {
-    console.error(err);
-    throw err;
-  }
-  else {
-    listContacts(body.access_token, "Johnette");
-  }
-})
-
-function listContacts(authToken, searchString) {
-  request.get(`${apiBaseUrl}/accounts/${accountId}/contacts`, {
-      headers: {
-        'Accept': 'application/json',
-        "Authorization": `Bearer ${authToken}`
-      },
-      qs: {
-        $async: false,
-        $filter: `'First name' eq '${searchString}'`,
-        $select: "'First name'"
-      },
-      json: true
-    },
-    function( err, res, body) {
-      if( err) {
-        console.error(err);
-        throw err;
-      }
-      else {
-        for (var i = 0; i < body.Contacts.length; i++) {
-          let contact = body.Contacts[i];
-          console.log(`${contact.DisplayName}: ${contact.Email}`);
+async function fetchContacts(access_token, skip = 0, top = 100) {
+    const response = await axios.get(
+        `${config.urls.apiUrl}/${config.credentials.accountId}/contacts/?$async=false&$top=${top}&$skip=${skip}`, 
+        {
+            headers: {
+                'Authorization': 'Bearer ' + access_token
+            }
         }
-      }
-    }
-  );
+    );
+    return response.data.Contacts;
 }
+
+async function main() {
+    try {
+        console.log('Get authorization token...');
+        // Get authorization token
+        const authResponse = await axios.post(config.urls.auth, 
+            'grant_type=client_credentials&scope=auto',
+            {
+                headers: {
+                    'Authorization': 'Basic ' + Buffer.from('APIKEY:' + config.credentials.apiKey).toString('base64'),
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }
+        );
+
+        const access_token = authResponse.data.access_token;
+        console.log('Access Token:', access_token);
+
+        // Fetch all contacts with pagination
+        let allContacts = [];
+        let skip = 0;
+        const batchSize = 100; // Define batch size as a constant
+        let hasMoreRecords = true;
+
+        while (hasMoreRecords) {
+            console.log(`Fetching contacts ${skip} to ${skip + batchSize}...`);
+            const contacts = await fetchContacts(access_token, skip, batchSize);
+            
+            if (contacts.length === 0) {
+                hasMoreRecords = false;
+            } else {
+                allContacts = allContacts.concat(contacts);
+                skip += batchSize;
+            }
+        }
+
+        console.log('Total contacts found:', allContacts.length);
+        
+        // Get last 5 contacts
+        const lastFiveContacts = allContacts.slice(-5);
+        console.log('\nLast 5 contacts:');
+        lastFiveContacts.forEach((contact, index) => {
+            console.log(`${index + 1}. Name: ${contact.FirstName} ${contact.LastName}, Email: ${contact.Email}`);
+        });
+
+    } catch (error) {
+        console.error('Error:', error.message);
+        if (error.response) {
+            console.error('Response data:', error.response.data);
+        }
+    }
+}
+
+main();
