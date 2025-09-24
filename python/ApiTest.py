@@ -4,6 +4,34 @@ import WaApi
 import urllib.parse
 import json
 
+def fetchAllContacts():
+    top = 100
+    skip = 0
+    all_contacts = []
+
+    while True:
+        params = {'$top': str(top),
+                  '$skip': str(skip),
+                  '$async': 'false'}
+        request_url = contactsUrl + '?' + urllib.parse.urlencode(params)
+        print(request_url)
+        resp = api.execute_request(request_url)
+
+        # response may expose Contacts property
+        page = resp.Contacts if hasattr(resp, 'Contacts') else resp
+
+        if not page:
+            break
+
+        all_contacts.extend(page)
+
+        # if returned less than requested page size, no more records
+        if len(page) < top:
+            break
+
+        skip += top
+
+    return all_contacts
 
 def get_10_active_members():
     params = {'$filter': 'member eq true',
@@ -66,3 +94,6 @@ print_contact_info(new_copntact)
 # finally archive it
 archived_contact = archive_contact(new_copntact.Id)
 print_contact_info(archived_contact)
+
+allContacts = fetchAllContacts()
+print('Total contacts fetched: ' + str(len(allContacts)))
