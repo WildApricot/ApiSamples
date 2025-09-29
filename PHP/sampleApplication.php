@@ -22,11 +22,18 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
     
     $contactsResult = getContactsList(); 
     $contacts =  $contactsResult['Contacts'];
+    echo "<p>Total Contacts Count: " . count($contacts) . "</p>";
 
-    foreach($contacts as $contact) {
-       echo '<br />';
-       echo sprintf("#%d - %s", $contact['Id'], $contact['DisplayName']);
-    }
+    echo "<p>First 10 contacts:</p>";
+   $counter = 0;
+   foreach($contacts as $contact) {
+      if ($counter >= 10) break; // stop after 10 contacts
+
+      echo '<br />';
+      echo sprintf("#%d - %s", $contact['Id'], $contact['DisplayName']);
+
+      $counter++;
+   }
 
     function getAccountDetails()
     {
@@ -40,14 +47,44 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
     {
        global $waApiClient;
        global $accountUrl;
-       $queryParams = array(
-          '$async' => 'false', // execute request synchronously
-          '$top' => 10, // limit result set to 10 records
-          '$filter' => 'Member eq true', // filter only members
-          '$select' => 'First name, Last name'
-       ); // select only first name and last name to reduce size of json data
-       $url = $accountUrl . '/Contacts/?' . http_build_query($queryParams);
-       return $waApiClient->makeRequest($url);
+
+       $top = 100;
+       $skip = 0;
+       $allContacts = array();
+
+       while (true) {
+          $queryParams = array(
+             '$async'  => 'false', // execute request synchronously
+             '$top'    => $top,    // page size (API limit)
+             '$skip'   => $skip,   // paging offset
+            // '$filter' => 'Member eq true', // keep original filter (remove or change if not needed)
+             '$select' => 'First name, Last name' // keep selection to reduce payload (adjust as needed)
+          );
+
+          $url = $accountUrl . '/Contacts/?' . http_build_query($queryParams);
+          echo "<p>Requesting: $url</p>";
+          $response = $waApiClient->makeRequest($url);
+
+          // response may contain 'Contacts' property or be the contacts array directly
+          $page = isset($response['Contacts']) ? $response['Contacts'] : $response;
+
+          if (empty($page)) {
+             break;
+          }
+
+          // merge page into accumulator
+          $allContacts = array_merge($allContacts, $page);
+
+          // if returned less than requested page size, no more records
+          if (count($page) < $top) {
+             break;
+          }
+
+          $skip += $top;
+       }
+
+       // return in the same shape the rest of the code expects
+       return array('Contacts' => $allContacts);
     }
 
     /**
@@ -105,6 +142,11 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
           }
 
           $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $url);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
           $headers = array(
              'Authorization: Bearer ' . $this->token,
              'Content-Type: application/json'
@@ -157,6 +199,9 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
        private function getAuthToken($data, $authorizationHeader)
        {
           $ch = curl_init();
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+         echo "<p>Requesting auth token...</p>";
           $headers = array(
              $authorizationHeader,
              'Content-Length: ' . strlen($data)
@@ -172,8 +217,10 @@ See http://help.wildapricot.com/display/DOC/API+Version+2 for detailed descripti
           }
           // var_dump($response); // Uncomment line to debug response	
 		  
-          $result = json_decode($response , true);
+
+        $result = json_decode($response , true);
           curl_close($ch);
+
           return $result['access_token'];
        }
 
